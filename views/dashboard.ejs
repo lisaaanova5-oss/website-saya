@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - UNIMARCH</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="layout">
+    <%- include('partials/sidebar', { aktif: 'dashboard' }) %>
+    <div class="konten">
+        <div class="topbar">
+            <h2>Dashboard</h2>
+            <span>Halo, <%= nama %></span>
+        </div>
+
+        <div class="kartu-wrap">
+            <div class="kartu">
+                <div><span>Surat Masuk</span><h1><%= masuk %></h1></div>
+                <div class="ikon biru"><%- ikon('surat', 22) %></div>
+            </div>
+            <div class="kartu">
+                <div><span>Surat Keluar</span><h1><%= keluar %></h1></div>
+                <div class="ikon hijau"><%- ikon('catatan', 22) %></div>
+            </div>
+            <div class="kartu">
+                <div><span>Disposisi</span><h1><%= disposisi %></h1></div>
+                <div class="ikon kuning"><%- ikon('dokumen', 22) %></div>
+            </div>
+            <div class="kartu">
+                <div><span>Arsip</span><h1><%= arsip %></h1></div>
+                <div class="ikon biru"><%- ikon('dokumen', 22) %></div>
+            </div>
+        </div>
+
+        <h3 class="judul-seksi">Surat Terbaru</h3>
+        <table class="tabel">
+            <thead>
+                <tr><th>No</th><th>Jenis</th><th>Nomor Surat</th><th>Perihal</th><th>Tanggal</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+            <% if (terbaru.length === 0) { %>
+                <tr><td colspan="6" class="kosong">Belum ada data surat.</td></tr>
+            <% } %>
+            <% terbaru.forEach(function (s, i) { %>
+                <tr>
+                    <td><%= i + 1 %></td>
+                    <td><%= ucfirst(s.jenis) %></td>
+                    <td><%= s.nomor_surat %></td>
+                    <td><%= s.perihal %></td>
+                    <td><%= tgl(s.tanggal) %></td>
+                    <td><span class="badge <%= s.status.toLowerCase() %>"><%= s.status %></span></td>
+                </tr>
+            <% }); %>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<%
+const menu = [
+  ['dashboard', '/dashboard',     'Dashboard',    'dashboard'],
+  ['masuk',     '/surat/masuk',   'Surat Masuk',  'masuk'],
+  ['keluar',    '/surat/keluar',  'Surat Keluar', 'keluar'],
+  ['arsip',     '/arsip',         'Arsip',        'arsip'],
+  ['disposisi', '/disposisi',     'Disposisi',    'disposisi'],
+  ['status',    '/status',        'Status Surat', 'status'],
+];
+%>
+<div class="sidebar">
+    <div class="brand"><%- ikon('buku', 24) %> UNIMARCH</div>
+    <% menu.forEach(function (m) { %>
+        <a href="<%= m[1] %>" class="<%= aktif === m[0] ? 'aktif' : '' %>">
+            <%- ikon(m[3]) %> <%= m[2] %>
+        </a>
+    <% }); %>
+    <a href="/logout" class="keluar"><%- ikon('logout') %> Logout</a>
+</div>

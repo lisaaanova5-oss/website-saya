@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title><%= id ? 'Edit' : 'Tambah' %> Surat - UNIMARCH</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="layout">
+    <%- include('partials/sidebar', { aktif: aktif }) %>
+    <div class="konten">
+        <div class="topbar">
+            <h2><%= id ? 'Edit' : 'Tambah' %> <%= jenis === 'masuk' ? 'Surat Masuk' : 'Surat Keluar' %></h2>
+            <span>Halo, <%= nama %></span>
+        </div>
+
+        <div class="form-kartu">
+            <% if (error) { %>
+                <div class="error"><%= error %></div>
+            <% } %>
+            <form method="POST" enctype="multipart/form-data"
+                  action="<%= id ? '/surat/edit/' + id : '/surat/' + jenis + '/tambah' %>">
+                <label>Nomor Surat</label>
+                <input type="text" name="nomor_surat" value="<%= data.nomor_surat %>" required>
+
+                <label><%= jenis === 'masuk' ? 'Pengirim' : 'Tujuan' %></label>
+                <input type="text" name="pengirim_tujuan" value="<%= data.pengirim_tujuan %>" required>
+
+                <label>Tanggal</label>
+                <input type="date" name="tanggal" value="<%= tglInput(data.tanggal) %>" required>
+
+                <label>Perihal</label>
+                <input type="text" name="perihal" value="<%= data.perihal %>" required>
+
+                <label>Status</label>
+                <select name="status">
+                    <% statusList.forEach(function (st) { %>
+                        <option value="<%= st %>" <%= data.status === st ? 'selected' : '' %>><%= st %></option>
+                    <% }); %>
+                </select>
+
+                <label>Dokumen (PDF/JPG/PNG/DOC, maks. 5 MB)</label>
+                <input type="file" name="dokumen">
+                <% if (data.file_dokumen) { %>
+                    <small>Dokumen saat ini:
+                        <a href="/uploads/<%= encodeURIComponent(data.file_dokumen) %>" target="_blank">Lihat</a>
+                        (unggah file baru untuk mengganti)
+                    </small>
+                <% } %>
+
+                <div class="tombol-form">
+                    <button type="submit" class="btn-tambah">Simpan</button>
+                    <a href="/surat/<%= jenis %>" class="btn-batal">Batal</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

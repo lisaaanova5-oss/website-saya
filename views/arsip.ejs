@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Arsip - UNIMARCH</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="layout">
+    <%- include('partials/sidebar', { aktif: aktif }) %>
+    <div class="konten">
+        <div class="topbar">
+            <h2>Arsip</h2>
+            <span>Halo, <%= nama %></span>
+        </div>
+
+        <% if (pesan) { %>
+            <div class="pesan"><%= pesan %></div>
+        <% } %>
+
+        <form method="POST" action="/arsip" class="form-arsip">
+            <input type="hidden" name="aksi" value="simpan">
+            <select name="id_surat" required>
+                <option value="">-- Pilih surat yang akan diarsipkan --</option>
+                <% belum.forEach(function (b) { %>
+                    <option value="<%= b.id_surat %>">
+                        [<%= ucfirst(b.jenis) %>] <%= b.nomor_surat %> - <%= b.perihal %>
+                    </option>
+                <% }); %>
+            </select>
+            <button type="submit" class="btn-tambah">Simpan ke Arsip</button>
+        </form>
+        <% if (belum.length === 0) { %>
+            <small class="catatan">Belum ada surat berdokumen yang menunggu diarsipkan.</small>
+        <% } %>
+
+        <div class="bar-atas">
+            <form method="GET" action="/arsip" class="form-cari">
+                <input type="text" name="q" value="<%= keyword %>"
+                       placeholder="Cari nomor surat, pengirim/tujuan, atau perihal...">
+                <button type="submit" class="btn-kecil">Cari</button>
+            </form>
+        </div>
+
+        <table class="tabel">
+            <thead>
+                <tr>
+                    <th>No</th><th>Jenis</th><th>Nomor Surat</th><th>Pengirim/Tujuan</th>
+                    <th>Tanggal</th><th>Perihal</th><th>Dokumen</th><th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+            <% if (daftar.length === 0) { %>
+                <tr><td colspan="8" class="kosong">Belum ada arsip.</td></tr>
+            <% } %>
+            <% daftar.forEach(function (a, i) { %>
+                <tr>
+                    <td><%= i + 1 %></td>
+                    <td><%= ucfirst(a.jenis) %></td>
+                    <td><%= a.nomor_surat %></td>
+                    <td><%= a.pengirim_tujuan %></td>
+                    <td><%= tgl(a.tanggal) %></td>
+                    <td><%= a.perihal %></td>
+                    <td><a href="/uploads/<%= encodeURIComponent(a.dokumen) %>" target="_blank" class="link-riwayat">Lihat</a></td>
+                    <td class="aksi">
+                        <form method="POST" action="/arsip" onsubmit="return confirm('Hapus dari arsip?');">
+                            <input type="hidden" name="aksi" value="hapus">
+                            <input type="hidden" name="id_arsip" value="<%= a.id_arsip %>">
+                            <button type="submit" class="hapus">Hapus</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }); %>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

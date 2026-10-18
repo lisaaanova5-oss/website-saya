@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - UNIMARCH</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body class="login-page">
+    <div class="login-box">
+        <div class="logo-bulat"><%- ikon('buku', 34) %></div>
+        <h2>UNIMARCH</h2>
+        <p class="sub">UNIMA Archive Management</p>
+        <p class="sub2">Sistem Arsip Surat Perpustakaan UNIMA</p>
+        <% if (error) { %>
+            <div class="error"><%= error %></div>
+        <% } %>
+        <form method="POST" action="/login">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Masukkan username" required>
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Masukkan password" required>
+            <button class="btn" type="submit">Login</button>
+        </form>
+        <div class="login-footer">© 2026 Perpustakaan UNIMA</div>
+    </div>
+</body>
+</html>

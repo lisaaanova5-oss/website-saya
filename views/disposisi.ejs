@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Disposisi - UNIMARCH</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="layout">
+    <%- include('partials/sidebar', { aktif: aktif }) %>
+    <div class="konten">
+        <div class="topbar">
+            <h2>Disposisi Surat</h2>
+            <span>Halo, <%= nama %></span>
+        </div>
+
+        <% if (pesan) { %>
+            <div class="pesan"><%= pesan %></div>
+        <% } %>
+
+        <div class="form-kartu">
+            <form method="POST" action="/disposisi">
+                <input type="hidden" name="aksi" value="buat">
+
+                <label>Surat</label>
+                <select name="id_surat" required>
+                    <option value="">-- Pilih surat --</option>
+                    <% daftarSurat.forEach(function (s) { %>
+                        <option value="<%= s.id_surat %>">
+                            [<%= ucfirst(s.jenis) %>] <%= s.nomor_surat %> - <%= s.perihal %>
+                        </option>
+                    <% }); %>
+                </select>
+
+                <label>Tujuan Disposisi (unit/pihak)</label>
+                <input type="text" name="tujuan" placeholder="Contoh: Kepala Perpustakaan" required>
+
+                <label>Catatan</label>
+                <textarea name="catatan" rows="3" placeholder="Masukkan catatan disposisi..."></textarea>
+
+                <label>Tanggal Disposisi</label>
+                <input type="date" name="tanggal" value="<%= tglInput(new Date()) %>" required>
+
+                <div class="tombol-form">
+                    <button type="submit" class="btn-tambah">Simpan Disposisi</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="bar-atas">
+            <form method="GET" action="/disposisi" class="form-cari">
+                <input type="text" name="q" value="<%= keyword %>"
+                       placeholder="Cari nomor surat, tujuan, atau perihal...">
+                <button type="submit" class="btn-kecil">Cari</button>
+            </form>
+        </div>
+
+        <table class="tabel">
+            <thead>
+                <tr>
+                    <th>No</th><th>Surat</th><th>Tujuan</th><th>Catatan</th>
+                    <th>Tanggal</th><th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            <% if (daftar.length === 0) { %>
+                <tr><td colspan="6" class="kosong">Belum ada disposisi.</td></tr>
+            <% } %>
+            <% daftar.forEach(function (d, i) { %>
+                <tr>
+                    <td><%= i + 1 %></td>
+                    <td>
+                        <%= d.nomor_surat %><br>
+                        <small><%= d.perihal %></small>
+                    </td>
+                    <td><%= d.tujuan %></td>
+                    <td><%= d.catatan ? d.catatan : '-' %></td>
+                    <td><%= tgl(d.tanggal_disposisi) %></td>
+                    <td>
+                        <form method="POST" action="/disposisi" class="form-status">
+                            <input type="hidden" name="aksi" value="ubah_status">
+                            <input type="hidden" name="id_disposisi" value="<%= d.id_disposisi %>">
+                            <select name="status" onchange="this.form.submit()">
+                                <% statusList.forEach(function (st) { %>
+                                    <option value="<%= st %>" <%= d.status === st ? 'selected' : '' %>><%= st %></option>
+                                <% }); %>
+                            </select>
+                        </form>
+                    </td>
+                </tr>
+            <% }); %>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

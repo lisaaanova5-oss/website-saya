@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title><%= jenis === 'masuk' ? 'Surat Masuk' : 'Surat Keluar' %> - UNIMARCH</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="layout">
+    <%- include('partials/sidebar', { aktif: aktif }) %>
+    <div class="konten">
+        <div class="topbar">
+            <h2><%= jenis === 'masuk' ? 'Surat Masuk' : 'Surat Keluar' %></h2>
+            <span>Halo, <%= nama %></span>
+        </div>
+
+        <% if (pesan) { %>
+            <div class="pesan"><%= pesan %></div>
+        <% } %>
+
+        <div class="bar-atas">
+            <form method="GET" class="form-cari">
+                <input type="text" name="q" value="<%= keyword %>"
+                       placeholder="Cari nomor surat, <%= jenis === 'masuk' ? 'pengirim' : 'tujuan' %>, atau perihal...">
+                <button type="submit" class="btn-kecil">Cari</button>
+            </form>
+            <a href="/surat/<%= jenis %>/tambah" class="btn-tambah">+ Tambah Surat</a>
+        </div>
+
+        <table class="tabel">
+            <thead>
+                <tr>
+                    <th>No</th><th>Nomor Surat</th><th><%= jenis === 'masuk' ? 'Pengirim' : 'Tujuan' %></th>
+                    <th>Tanggal</th><th>Perihal</th><th>Status</th><th>Dokumen</th><th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+            <% if (daftar.length === 0) { %>
+                <tr><td colspan="8" class="kosong">Belum ada data surat.</td></tr>
+            <% } %>
+            <% daftar.forEach(function (s, i) { %>
+                <tr>
+                    <td><%= i + 1 %></td>
+                    <td><%= s.nomor_surat %></td>
+                    <td><%= s.pengirim_tujuan %></td>
+                    <td><%= tgl(s.tanggal) %></td>
+                    <td><%= s.perihal %></td>
+                    <td><span class="badge <%= s.status.toLowerCase() %>"><%= s.status %></span></td>
+                    <td>
+                        <% if (s.file_dokumen) { %>
+                            <a href="/uploads/<%= encodeURIComponent(s.file_dokumen) %>" target="_blank" class="link-riwayat">Lihat</a>
+                        <% } else { %>-<% } %>
+                    </td>
+                    <td class="aksi">
+                        <a href="/surat/edit/<%= s.id_surat %>">Edit</a>
+                        <form method="POST" action="/surat/hapus/<%= s.id_surat %>"
+                              onsubmit="return confirm('Hapus surat ini?');">
+                            <button type="submit" class="hapus">Hapus</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }); %>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
